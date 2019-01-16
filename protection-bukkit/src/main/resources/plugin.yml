@@ -1,0 +1,11 @@
+name: Protection
+main: com.oglofus.protection.bukkit.ProtectionBukkit
+version: ${version}
+author: nikosgram
+
+commands:
+  protection:
+    aliases:
+      - protect
+      - p
+    description: Access to all Protection commands.
