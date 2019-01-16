@@ -1,0 +1,3 @@
+rootProject.name = 'protection'
+
+include 'protection-api', 'protection-bukkit', 'protection-sponge'

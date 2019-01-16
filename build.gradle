@@ -1,0 +1,18 @@
+plugins {
+    id 'java'
+}
+
+allprojects {
+    group 'com.oglofus'
+    version '1.0.1-SNMAPSHOT'
+    description 'This plugin allows the players to place a special block that protects a specifical area around the block and protects this area from griefing, like PreciousStones.'
+
+    sourceCompatibility = 1.8
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+}
