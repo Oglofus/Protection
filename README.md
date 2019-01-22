@@ -1,1 +1,1 @@
-# Protection
+# Protection [![Build Status](https://travis-ci.com/Oglofus/Protection.svg?branch=master)](https://travis-ci.com/Oglofus/Protection) [![](https://jitpack.io/v/Oglofus/Protection.svg)](https://jitpack.io/#Oglofus/Protection)
