@@ -14,12 +14,16 @@
  * limitations under the License.
  */
 
-package com.oglofus.protection.api.position;
+package com.oglofus.protection.api.sender;
 
-public interface Position {
-    float getX();
+import com.oglofus.protection.api.Identifiable;
+import com.oglofus.protection.api.Nameable;
+import com.oglofus.protection.api.Transformable;
 
-    float getY();
+public interface Sender extends Identifiable, Nameable, Transformable {
+    default void sendMessage(String message) {
+        sendMessage(MessageType.Chat, message);
+    }
 
-    float getZ();
+    void sendMessage(MessageType type, String message);
 }

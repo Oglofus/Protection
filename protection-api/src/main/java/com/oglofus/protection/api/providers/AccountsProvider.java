@@ -16,17 +16,34 @@
 
 package com.oglofus.protection.api.providers;
 
+import com.oglofus.protection.api.Nameable;
 import com.oglofus.protection.api.account.Account;
+import com.sk89q.intake.argument.ArgumentException;
+import com.sk89q.intake.argument.ArgumentParseException;
+import com.sk89q.intake.argument.CommandArgs;
 
-import java.util.Optional;
+import javax.annotation.Nullable;
+import java.lang.annotation.Annotation;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
-public interface AccountsProvider extends Provider<UUID, Account> {
-    default boolean contains(String name) {
-        return stream().anyMatch(account -> account.getName().equals(name));
+public interface AccountsProvider extends OglofusProvider<UUID, Account> {
+    @Nullable
+    @Override
+    default Account get(CommandArgs arguments, List<? extends Annotation> modifiers) throws ArgumentException {
+        String name = arguments.next();
+
+        return get(name).orElseThrow(() -> new ArgumentParseException(
+                "No player by the name of '" + name + "' is known!"
+        ));
     }
 
-    default Optional<Account> get(String name) {
-        return stream().filter(account -> account.getName().equals(name)).findFirst();
+    @Override
+    default List<String> getSuggestions(String prefix) {
+        return stream().filter(nameable -> nameable.getName()
+                .startsWith(prefix))
+                .map(Nameable::getName)
+                .collect(Collectors.toList());
     }
 }

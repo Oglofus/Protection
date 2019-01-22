@@ -16,17 +16,34 @@
 
 package com.oglofus.protection.api.providers;
 
+import com.oglofus.protection.api.Nameable;
 import com.oglofus.protection.api.cosmos.Cosmos;
+import com.sk89q.intake.argument.ArgumentException;
+import com.sk89q.intake.argument.ArgumentParseException;
+import com.sk89q.intake.argument.CommandArgs;
 
-import java.util.Optional;
+import javax.annotation.Nullable;
+import java.lang.annotation.Annotation;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
-public interface CosmosProvider extends Provider<UUID, Cosmos> {
-    default boolean contains(String name) {
-        return stream().anyMatch(cosmos -> cosmos.getName().equals(name));
+public interface CosmosProvider extends OglofusProvider<UUID, Cosmos> {
+    @Nullable
+    @Override
+    default Cosmos get(CommandArgs arguments, List<? extends Annotation> modifiers) throws ArgumentException {
+        String name = arguments.next();
+
+        return get(name).orElseThrow(() -> new ArgumentParseException(
+                "No world by the name of '" + name + "' is known!"
+        ));
     }
 
-    default Optional<Cosmos> get(String name) {
-        return stream().filter(cosmos -> cosmos.getName().equals(name)).findFirst();
+    @Override
+    default List<String> getSuggestions(String prefix) {
+        return stream().filter(nameable -> nameable.getName()
+                .startsWith(prefix))
+                .map(Nameable::getName)
+                .collect(Collectors.toList());
     }
 }

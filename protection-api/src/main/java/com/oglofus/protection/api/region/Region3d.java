@@ -14,18 +14,17 @@
  * limitations under the License.
  */
 
-package com.oglofus.protection.api;
+package com.oglofus.protection.api.region;
 
-import com.oglofus.protection.api.providers.AccountsProvider;
-import com.oglofus.protection.api.providers.CosmosProvider;
-import com.oglofus.protection.api.providers.ProtectionsProvider;
+import com.oglofus.protection.api.cosmos.Cosmos;
+import com.oglofus.protection.api.point.Point3d;
 
-public interface Platform {
-    String getVersion();
+public interface Region3d extends Iterable<Point3d> {
+    Cosmos getCosmos();
 
-    AccountsProvider getAccounts();
+    Point3d getMax();
 
-    ProtectionsProvider getProtections();
+    Point3d getLow();
 
-    CosmosProvider getCosmoses();
+    Point3d getCenter();
 }

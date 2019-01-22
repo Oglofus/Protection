@@ -16,16 +16,8 @@
 
 package com.oglofus.protection.api;
 
-import com.oglofus.protection.api.providers.AccountsProvider;
-import com.oglofus.protection.api.providers.CosmosProvider;
-import com.oglofus.protection.api.providers.ProtectionsProvider;
+import java.util.Optional;
 
-public interface Platform {
-    String getVersion();
-
-    AccountsProvider getAccounts();
-
-    ProtectionsProvider getProtections();
-
-    CosmosProvider getCosmoses();
+public interface Transformable {
+    <T> Optional<T> transformTo(Class<T> tClass);
 }

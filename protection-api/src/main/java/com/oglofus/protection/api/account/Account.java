@@ -19,12 +19,13 @@ package com.oglofus.protection.api.account;
 import com.oglofus.protection.OglofusProtection;
 import com.oglofus.protection.api.Identifiable;
 import com.oglofus.protection.api.Nameable;
+import com.oglofus.protection.api.Transformable;
 import com.oglofus.protection.api.cosmos.Cosmos;
-import com.oglofus.protection.api.position.Position;
-import com.oglofus.protection.api.protection.Category;
+import com.oglofus.protection.api.point.Point3d;
+import com.oglofus.protection.api.protection.MemberCategory;
 import com.oglofus.protection.api.protection.Protection;
+import com.oglofus.protection.api.sender.Sender;
 
-import java.io.Serializable;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Spliterator;
@@ -33,18 +34,18 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-public interface Account extends Identifiable, Nameable, Iterable<Protection>, Serializable {
+public interface Account extends Sender, Iterable<Protection> {
     Cosmos getCosmos();
 
-    Position getPosition();
+    Point3d getPosition();
 
-    Category getCategory(Protection protection);
+    MemberCategory getCategory(Protection protection);
 
     Collection<Protection> getProtections();
 
-    default Collection<Protection> getProtections(Category category) {
+    default Collection<Protection> getProtections(MemberCategory memberCategory) {
         return OglofusProtection.getPlatform().getProtections().stream()
-                .filter(protection -> protection.getCategory(this) == category)
+                .filter(protection -> protection.getCategory(this) == memberCategory)
                 .collect(Collectors.toList());
     }
 

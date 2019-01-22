@@ -14,18 +14,14 @@
  * limitations under the License.
  */
 
-package com.oglofus.protection.api;
+package com.oglofus.protection.api.point;
 
-import com.oglofus.protection.api.providers.AccountsProvider;
-import com.oglofus.protection.api.providers.CosmosProvider;
-import com.oglofus.protection.api.providers.ProtectionsProvider;
+import com.oglofus.protection.api.Transformable;
 
-public interface Platform {
-    String getVersion();
+public interface Point3d extends Transformable {
+    double getX();
 
-    AccountsProvider getAccounts();
+    double getY();
 
-    ProtectionsProvider getProtections();
-
-    CosmosProvider getCosmoses();
+    double getZ();
 }

@@ -18,9 +18,12 @@ package com.oglofus.protection.sponge;
 
 import com.google.inject.Inject;
 import org.slf4j.Logger;
+import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.GameStartedServerEvent;
 import org.spongepowered.api.plugin.Plugin;
+import org.spongepowered.api.text.chat.ChatType;
+import org.spongepowered.api.text.chat.ChatTypes;
 
 /**
  * The type Protection sponge.
@@ -40,6 +43,9 @@ public class ProtectionSponge {
      */
     @Listener
     public void onServerStart(GameStartedServerEvent event) {
+        Player player = null;
+        player.sendMessage(ChatTypes);
+
         logger.info("Successfully running ProtectionPlugin!!!");
     }
 }

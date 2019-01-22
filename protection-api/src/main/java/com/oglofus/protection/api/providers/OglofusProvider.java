@@ -16,6 +16,9 @@
 
 package com.oglofus.protection.api.providers;
 
+import com.oglofus.protection.api.Nameable;
+import com.sk89q.intake.parametric.Provider;
+
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Optional;
@@ -25,55 +28,33 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 /**
- * The interface Provider.
+ * The interface OglofusProvider.
  *
  * @param <T> the type parameter
  * @param <D> the type parameter
  */
-public interface Provider<T, D> extends Iterable<D> {
-    /**
-     * Keys collection.
-     *
-     * @return the collection
-     */
+public interface OglofusProvider<T, D extends Nameable> extends Iterable<D>, Provider<D> {
     Collection<T> keys();
 
-    /**
-     * Values collection.
-     *
-     * @return the collection
-     */
     Collection<D> values();
 
-    /**
-     * Contains boolean.
-     *
-     * @param key the key
-     * @return the boolean
-     */
     boolean contains(T key);
 
-    /**
-     * Get optional.
-     *
-     * @param key the key
-     * @return the optional
-     */
     Optional<D> get(T key);
 
-    /**
-     * Size int.
-     *
-     * @return the int
-     */
+    <E> Optional<D> get(E target, Class<E> eClass);
+
     int size();
 
-    /**
-     * Is empty boolean.
-     *
-     * @return the boolean
-     */
     boolean isEmpty();
+
+    default boolean contains(String name) {
+        return stream().anyMatch(account -> account.getName().equals(name));
+    }
+
+    default Optional<D> get(String name) {
+        return stream().filter(account -> account.getName().equals(name)).findFirst();
+    }
 
     @Override
     default Iterator<D> iterator() {
@@ -90,21 +71,16 @@ public interface Provider<T, D> extends Iterable<D> {
         return values().spliterator();
     }
 
-    /**
-     * Stream stream.
-     *
-     * @return the stream
-     */
     default Stream<D> stream() {
         return StreamSupport.stream(spliterator(), false);
     }
 
-    /**
-     * Parallel stream stream.
-     *
-     * @return the stream
-     */
     default Stream<D> parallelStream() {
         return StreamSupport.stream(spliterator(), true);
+    }
+
+    @Override
+    default boolean isProvided() {
+        return false;
     }
 }

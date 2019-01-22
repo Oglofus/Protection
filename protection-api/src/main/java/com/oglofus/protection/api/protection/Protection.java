@@ -20,8 +20,7 @@ import com.oglofus.protection.OglofusProtection;
 import com.oglofus.protection.api.Identifiable;
 import com.oglofus.protection.api.Nameable;
 import com.oglofus.protection.api.account.Account;
-import com.oglofus.protection.api.cosmos.Cosmos;
-import com.oglofus.protection.api.position.Position;
+import com.oglofus.protection.api.region.Region3d;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -32,30 +31,28 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 public interface Protection extends Identifiable, Nameable, Iterable<Account> {
-    Cosmos getCosmos();
+    Region3d getRegion();
 
-    Position getPosition();
-
-    Category getCategory(Account account);
+    MemberCategory getCategory(Account account);
 
     Collection<Account> getAccounts();
 
-    default Collection<Account> getAccounts(Category category) {
+    default Collection<Account> getAccounts(MemberCategory memberCategory) {
         return OglofusProtection.getPlatform().getAccounts().stream()
-                .filter(account -> account.getCategory(this) == category)
+                .filter(account -> account.getCategory(this) == memberCategory)
                 .collect(Collectors.toList());
     }
 
     default Collection<Account> getOwners() {
-        return getAccounts(Category.Owner);
+        return getAccounts(MemberCategory.Owner);
     }
 
     default Collection<Account> getMembers() {
-        return getAccounts(Category.Member);
+        return getAccounts(MemberCategory.Member);
     }
 
     default Collection<Account> getUncategorizables() {
-        return getAccounts(Category.Uncategorizable);
+        return getAccounts(MemberCategory.Uncategorizable);
     }
 
     @Override

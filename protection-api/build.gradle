@@ -7,4 +7,5 @@ repositories {
 }
 
 dependencies {
+    implementation 'com.github.EngineHub:Intake:master-SNAPSHOT'
 }

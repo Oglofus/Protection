@@ -14,18 +14,7 @@
  * limitations under the License.
  */
 
-package com.oglofus.protection.api;
-
-import com.oglofus.protection.api.providers.AccountsProvider;
-import com.oglofus.protection.api.providers.CosmosProvider;
-import com.oglofus.protection.api.providers.ProtectionsProvider;
-
-public interface Platform {
-    String getVersion();
-
-    AccountsProvider getAccounts();
-
-    ProtectionsProvider getProtections();
-
-    CosmosProvider getCosmoses();
+public class Example {
+    public static void main(String[] args) {
+    }
 }

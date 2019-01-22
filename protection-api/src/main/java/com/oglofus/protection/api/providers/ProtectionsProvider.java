@@ -16,44 +16,67 @@
 
 package com.oglofus.protection.api.providers;
 
+import com.oglofus.protection.api.Nameable;
 import com.oglofus.protection.api.account.Account;
-import com.oglofus.protection.api.position.Position;
-import com.oglofus.protection.api.protection.Category;
+import com.oglofus.protection.api.point.Point3d;
+import com.oglofus.protection.api.protection.MemberCategory;
 import com.oglofus.protection.api.protection.Protection;
+import com.sk89q.intake.argument.ArgumentException;
+import com.sk89q.intake.argument.ArgumentParseException;
+import com.sk89q.intake.argument.CommandArgs;
 
+import javax.annotation.Nullable;
+import java.lang.annotation.Annotation;
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-public interface ProtectionsProvider extends Provider<UUID, Protection> {
-    Collection<Protection> getProtections();
-
-    default Optional<Protection> getProtectionOn(Position position) {
+public interface ProtectionsProvider extends OglofusProvider<UUID, Protection> {
+    default Optional<Protection> getProtectionOn(Point3d point3d) {
         return Optional.empty();
     }
 
     default Collection<Protection> getProtectionsByAccount(Account account) {
         return stream()
-                .filter(protection -> protection.getCategory(account) != Category.Uncategorizable)
+                .filter(protection -> protection.getCategory(account) != MemberCategory.Uncategorizable)
                 .collect(Collectors.toList());
     }
 
-    default Collection<Protection> getProtectionsByAccount(Account account, Category category) {
+    default Collection<Protection> getProtectionsByAccount(Account account, MemberCategory memberCategory) {
         return stream()
-                .filter(protection -> protection.getCategory(account) == category)
+                .filter(protection -> protection.getCategory(account) == memberCategory)
                 .collect(Collectors.toList());
     }
 
     default Collection<Protection> getProtectionsByOwner(Account account) {
-        return getProtectionsByAccount(account, Category.Owner);
+        return getProtectionsByAccount(account, MemberCategory.Owner);
     }
 
     default Collection<Protection> getProtectionsByMember(Account account) {
-        return getProtectionsByAccount(account, Category.Member);
+        return getProtectionsByAccount(account, MemberCategory.Member);
     }
 
     default Collection<Protection> getProtectionsByUncategorizable(Account account) {
-        return getProtectionsByAccount(account, Category.Uncategorizable);
+        return getProtectionsByAccount(account, MemberCategory.Uncategorizable);
+    }
+
+    @Nullable
+    @Override
+    default Protection get(CommandArgs arguments, List<? extends Annotation> modifiers) throws ArgumentException {
+        String name = arguments.next();
+
+        return get(name).orElseThrow(() -> new ArgumentParseException(
+                "No protection area by the name of '" + name + "' is known!"
+        ));
+    }
+
+    @Override
+    default List<String> getSuggestions(String prefix) {
+        return stream().filter(nameable -> nameable.getName()
+                .startsWith(prefix))
+                .map(Nameable::getName)
+                .collect(Collectors.toList());
     }
 }

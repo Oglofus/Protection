@@ -18,6 +18,7 @@ package com.oglofus.protection.api.cosmos;
 
 import com.oglofus.protection.api.Identifiable;
 import com.oglofus.protection.api.Nameable;
+import com.oglofus.protection.api.Transformable;
 import com.oglofus.protection.api.account.Account;
 import com.oglofus.protection.api.protection.Protection;
 
@@ -28,7 +29,7 @@ import java.util.function.Consumer;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-public interface Cosmos extends Identifiable, Nameable, Iterable<Protection> {
+public interface Cosmos extends Identifiable, Nameable, Transformable, Iterable<Protection> {
     Collection<Protection> getProtections();
 
     Collection<Account> getAccounts();

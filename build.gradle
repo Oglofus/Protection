@@ -8,6 +8,12 @@ allprojects {
     description 'Protection allows the players to place a special block that protects a specific area around the block and protects this area from griefing, like PreciousStones.'
 
     sourceCompatibility = 1.8
+
+    repositories {
+        maven {
+            url 'https://jitpack.io'
+        }
+    }
 }
 
 repositories {
