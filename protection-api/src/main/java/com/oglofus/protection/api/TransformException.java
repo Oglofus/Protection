@@ -14,32 +14,15 @@
  * limitations under the License.
  */
 
-package com.oglofus.protection.sponge;
+package com.oglofus.protection.api;
 
-import com.google.inject.Inject;
-import org.slf4j.Logger;
-import org.spongepowered.api.event.Listener;
-import org.spongepowered.api.event.game.state.GameStartedServerEvent;
-import org.spongepowered.api.plugin.Plugin;
-
-/**
- * The type Protection sponge.
- */
-@Plugin(id = "protection")
-public class ProtectionSponge {
+public class TransformException extends RuntimeException {
     /**
-     * The Logger.
+     * Constructs a new exception with {@code null} as its detail message.
+     * The cause is not initialized, and may subsequently be initialized by a
+     * call to {@link #initCause}.
      */
-    @Inject
-    private Logger logger;
-
-    /**
-     * On server start.
-     *
-     * @param event the event
-     */
-    @Listener
-    public void onServerStart(GameStartedServerEvent event) {
-        logger.info("Successfully running ProtectionPlugin!!!");
+    public TransformException(Class<?> aClass) {
+        super("Class " + aClass.getName() + " is not supported.");
     }
 }

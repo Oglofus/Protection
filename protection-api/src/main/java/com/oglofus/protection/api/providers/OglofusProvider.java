@@ -17,6 +17,7 @@
 package com.oglofus.protection.api.providers;
 
 import com.oglofus.protection.api.Nameable;
+import com.oglofus.protection.api.TransformException;
 import com.sk89q.intake.parametric.Provider;
 
 import java.util.Collection;
@@ -42,7 +43,7 @@ public interface OglofusProvider<T, D extends Nameable> extends Iterable<D>, Pro
 
     Optional<D> get(T key);
 
-    <E> Optional<D> get(E target, Class<E> eClass);
+    <E> Optional<D> get(E target, Class<E> eClass) throws TransformException;
 
     int size();
 

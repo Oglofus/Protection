@@ -1,5 +1,5 @@
 name: Protection
-main: com.oglofus.protection.bukkit.ProtectionBukkit
+main: com.oglofus.protection.ProtectionBukkit
 version: ${version}
 author: nikosgram
 

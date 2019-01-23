@@ -16,6 +16,7 @@
 
 package com.oglofus.protection.api.cosmos;
 
+import com.oglofus.protection.OglofusProtection;
 import com.oglofus.protection.api.Identifiable;
 import com.oglofus.protection.api.Nameable;
 import com.oglofus.protection.api.Transformable;
@@ -26,13 +27,26 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Spliterator;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 public interface Cosmos extends Identifiable, Nameable, Transformable, Iterable<Protection> {
-    Collection<Protection> getProtections();
+    default Collection<Protection> getProtections() {
+        return OglofusProtection.getPlatform()
+                .getProtections()
+                .stream()
+                .filter(protection -> protection.getRegion().getCosmos().getUuid().equals(getUuid()))
+                .collect(Collectors.toList());
+    }
 
-    Collection<Account> getAccounts();
+    default Collection<Account> getAccounts() {
+        return OglofusProtection.getPlatform()
+                .getAccounts()
+                .stream()
+                .filter(account -> account.getCosmos().isPresent() && account.getCosmos().get().getUuid().equals(getUuid()))
+                .collect(Collectors.toList());
+    }
 
     @Override
     default Iterator<Protection> iterator() {

@@ -16,20 +16,30 @@
 
 package com.oglofus.protection;
 
-import com.oglofus.protection.api.Platform;
+import com.google.inject.Inject;
+import org.slf4j.Logger;
+import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.game.state.GameStartedServerEvent;
+import org.spongepowered.api.plugin.Plugin;
 
-public class OglofusProtection {
-    private static Platform platform;
+/**
+ * The type Protection sponge.
+ */
+@Plugin(id = "protection")
+public class ProtectionSponge {
+    /**
+     * The Logger.
+     */
+    @Inject
+    private Logger logger;
 
-    public static Platform getPlatform() {
-        return platform;
-    }
-
-    static void init(Platform platform) {
-        if (OglofusProtection.platform != null) {
-            throw new RuntimeException("Platform is already initialized");
-        }
-
-        OglofusProtection.platform = platform;
+    /**
+     * On server start.
+     *
+     * @param event the event
+     */
+    @Listener
+    public void onServerStart(GameStartedServerEvent event) {
+        logger.info("Successfully running ProtectionPlugin!!!");
     }
 }

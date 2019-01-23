@@ -21,9 +21,5 @@ import com.oglofus.protection.api.Nameable;
 import com.oglofus.protection.api.Transformable;
 
 public interface Sender extends Identifiable, Nameable, Transformable {
-    default void sendMessage(String message) {
-        sendMessage(MessageType.Chat, message);
-    }
-
-    void sendMessage(MessageType type, String message);
+    void sendMessage(String message);
 }

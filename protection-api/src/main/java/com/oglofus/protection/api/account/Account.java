@@ -17,9 +17,6 @@
 package com.oglofus.protection.api.account;
 
 import com.oglofus.protection.OglofusProtection;
-import com.oglofus.protection.api.Identifiable;
-import com.oglofus.protection.api.Nameable;
-import com.oglofus.protection.api.Transformable;
 import com.oglofus.protection.api.cosmos.Cosmos;
 import com.oglofus.protection.api.point.Point3d;
 import com.oglofus.protection.api.protection.MemberCategory;
@@ -28,6 +25,7 @@ import com.oglofus.protection.api.sender.Sender;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Optional;
 import java.util.Spliterator;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -35,13 +33,19 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 public interface Account extends Sender, Iterable<Protection> {
-    Cosmos getCosmos();
+    Optional<Cosmos> getCosmos();
 
-    Point3d getPosition();
+    Optional<Point3d> getPosition();
 
-    MemberCategory getCategory(Protection protection);
+    default MemberCategory getCategory(Protection protection) {
+        return protection.getCategory(this);
+    }
 
-    Collection<Protection> getProtections();
+    default Collection<Protection> getProtections() {
+        return OglofusProtection.getPlatform().getProtections().stream()
+                .filter(protection -> protection.getCategory(this) != MemberCategory.Uncategorizable)
+                .collect(Collectors.toList());
+    }
 
     default Collection<Protection> getProtections(MemberCategory memberCategory) {
         return OglofusProtection.getPlatform().getProtections().stream()

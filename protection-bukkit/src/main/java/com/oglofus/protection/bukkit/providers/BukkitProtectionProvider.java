@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-package com.oglofus.protection.api;
+package com.oglofus.protection.bukkit.providers;
 
-import java.util.Optional;
+import org.bukkit.event.Listener;
 
-public interface Transformable {
-    <T> Optional<T> transformTo(Class<T> tClass) throws TransformException;
+public class BukkitProtectionProvider implements Listener {
 }

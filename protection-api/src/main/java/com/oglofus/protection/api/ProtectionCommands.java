@@ -41,7 +41,7 @@ public class ProtectionCommands {
         if (protection == null) {
             if (sender instanceof Account) {
                 protection = platform.getProtections()
-                        .getProtectionOn(((Account) sender).getPosition())
+                        .getProtectionOn(((Account) sender).getPosition().orElse(null))
                         .orElseThrow(() -> new CommandException("There is no protection here."));
             } else {
                 throw new CommandException("Hmmm, who are you?");
