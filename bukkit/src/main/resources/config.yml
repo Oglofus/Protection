@@ -1,0 +1,47 @@
+---
+protector:
+  material: SPONGE
+  metadata: protector
+region:
+  flags:
+    use:
+      group: nonmembers
+      value: deny
+    lava-fire:
+      value: deny
+    creeper-explosion:
+      value: deny
+    ghast-fireball:
+      value: deny
+    enderdragon-block-damage:
+      value: deny
+    fire-spread:
+      value: deny
+    enderman-grief:
+      value: deny
+    entity-painting-destroy:
+      value: deny
+    entity-item-frame-destroy:
+      value: deny
+    entry:
+      permission: oglofus.protection.flag.entry
+      group: non_members
+      value: deny
+    enderpearl:
+      permission: oglofus.protection.flag.enderpearl
+      group: non_members
+      value: deny
+  limits:
+    default:
+      default: true
+      value: 3
+    vip:
+      permission: com.oglofus.protection.limit.vip
+      value: 6
+  radius:
+    default:
+      default: true
+      value: 6
+    vip:
+      permission: com.oglofus.protection.radius.vip
+      value: 10

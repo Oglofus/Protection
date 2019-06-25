@@ -1,0 +1,129 @@
+name: ${project.name}
+main: com.oglofus.protection.OglofusPlugin
+author: Nikolaos Grammatikos <nikosgram@oglofus.com>
+version: ${project.version}
+softdepend: [WorldEdit, WorldGuard]
+description: ${project.description}
+
+commands:
+  protection:
+    description: Access to protection commands
+    aliases: [protect, protector, p]
+    permission: oglofus.protection.command
+    usage: /<command> <give/info/invite/kick/promote/demote/config>
+
+permissions:
+  oglofus.protection.command:
+    default: true
+  oglofus.protection.command.give:
+    default: op
+  oglofus.protection.command.help:
+    default: true
+  oglofus.protection.command.info:
+    default: true
+  oglofus.protection.command.append:
+    default: true
+  oglofus.protection.command.remove:
+    default: true
+  oglofus.protection.command.promote:
+    default: true
+  oglofus.protection.command.demote:
+    default: true
+  oglofus.protection.command.config:
+    default: op
+  oglofus.protection.command.config.load:
+    default: op
+  oglofus.protection.command.config.save:
+    default: op
+  oglofus.protection.command.config.region.limits:
+    default: op
+  oglofus.protection.command.config.region.limits.list:
+    default: op
+  oglofus.protection.command.config.region.limits.remove:
+    default: op
+  oglofus.protection.command.config.region.limits.append:
+    default: op
+  oglofus.protection.command.config.region.radius:
+    default: op
+  oglofus.protection.command.config.region.radius.list:
+    default: op
+  oglofus.protection.command.config.region.radius.remove:
+    default: op
+  oglofus.protection.command.config.region.radius.append:
+    default: op
+  oglofus.protection.command.config.region.limits.*:
+    default: op
+    children:
+      oglofus.protection.command.config.region.limits: true
+      oglofus.protection.command.config.region.limits.list: true
+      oglofus.protection.command.config.region.limits.remove: true
+      oglofus.protection.command.config.region.limits.append: true
+  oglofus.protection.command.config.region.radius.*:
+    default: op
+    children:
+      oglofus.protection.command.config.region.radius: true
+      oglofus.protection.command.config.region.radius.list: true
+      oglofus.protection.command.config.region.radius.remove: true
+      oglofus.protection.command.config.region.radius.append: true
+  oglofus.protection.command.config.region.*:
+    default: op
+    children:
+      oglofus.protection.command.config.region.limits.*: true
+      oglofus.protection.command.config.region.radius.*: true
+  oglofus.protection.command.config.*:
+    default: op
+    children:
+      oglofus.protection.command.config: true
+      oglofus.protection.command.config.load: true
+      oglofus.protection.command.config.save: true
+      oglofus.protection.command.config.region.*: true
+  oglofus.protection.command.*:
+    default: op
+    children:
+      oglofus.protection.command: true
+      oglofus.protection.command.give: true
+      oglofus.protection.command.help: true
+      oglofus.protection.command.info: true
+      oglofus.protection.command.append: true
+      oglofus.protection.command.remove: true
+      oglofus.protection.command.promote: true
+      oglofus.protection.command.demote: true
+      oglofus.protection.command.config.*: true
+  oglofus.protection.command.admin:
+    default: op
+    children:
+      oglofus.protection.command.*: true
+  oglofus.protection.command.player:
+    default: op
+    children:
+      oglofus.protection.command: true
+      oglofus.protection.command.help: true
+      oglofus.protection.command.info: true
+      oglofus.protection.command.append: true
+      oglofus.protection.command.remove: true
+      oglofus.protection.command.promote: true
+      oglofus.protection.command.demote: true
+  oglofus.protection.bypass.append:
+    default: op
+  oglofus.protection.bypass.remove:
+    default: op
+  oglofus.protection.bypass.promote:
+    default: op
+  oglofus.protection.bypass.demote:
+    default: op
+  oglofus.protection.bypass.destroy:
+    default: op
+  oglofus.protection.bypass.limit:
+    default: op
+  oglofus.protection.bypass.radius:
+    default: op
+  oglofus.protection.bypass.*:
+    default: op
+    children:
+      oglofus.protection.bypass.append: true
+      oglofus.protection.bypass.remove: true
+      oglofus.protection.bypass.promote: true
+      oglofus.protection.bypass.demote: true
+      oglofus.protection.bypass.destroy: true
+      oglofus.protection.bypass.limit: true
+      oglofus.protection.bypass.radius: true
