@@ -5,6 +5,8 @@ import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 
+import javax.annotation.Nonnull;
+
 /**
  * This file is part of Oglofus Protection project.
  * Created by Nikolaos Grammatikos <nikosgram@oglofus.com> on 20/05/2017.
@@ -81,6 +83,7 @@ public class ProtectorCreatedEvent extends ProtectorEvent {
      * @return the handlers
      */
     @Override
+    @Nonnull
     public HandlerList getHandlers() {
         return handlers;
     }

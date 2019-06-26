@@ -12,9 +12,12 @@ import com.oglofus.protection.api.manager.ConfigurationManager;
 import com.oglofus.protection.api.manager.ProtectorManager;
 import com.oglofus.protection.api.manager.RequestManager;
 import com.oglofus.protection.api.protector.Protector;
+import com.oglofus.protection.api.protector.region.Region;
 import com.oglofus.protection.api.reguest.Request;
 import com.oglofus.protection.api.value.Value;
 import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.world.block.BaseBlock;
+import com.sk89q.worldedit.world.block.BlockTypes;
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
@@ -23,6 +26,7 @@ import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
+import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -149,9 +153,37 @@ public class OglofusPlugin extends JavaPlugin implements Manager {
 
             return true;
         });
-        command.setTabCompleter(oglofusCommand);
 
+        command.setTabCompleter(oglofusCommand);
         protectors.syncProtectors();
+
+        Metrics metrics = new Metrics(this);
+
+        metrics.addCustomChart(new Metrics.SingleLineChart("protectionsChart", protectors.getProtectors()::size));
+        metrics.addCustomChart(new Metrics.SingleLineChart("protectedBlocksChart", () -> {
+            int returned = 0;
+
+            try {
+                for (Protector protector : protectors.getProtectors()) {
+                    Region region = protector.getRegion();
+                    com.sk89q.worldedit.world.World world = region.getWorld();
+
+                    for (BlockVector3 vector : region) {
+                        BaseBlock block = world.getFullBlock(vector);
+
+                        if (block.getBlockType().equals(BlockTypes.AIR)) {
+                            continue;
+                        }
+
+                        returned++;
+                    }
+                }
+            } catch (Throwable ignored) {}
+
+            return returned;
+        }));
+
+        metrics.addCustomChart(new Metrics.SimplePie("selectedMaterialsChart", () -> configuration.protector.material.name()));
     }
 
     /**
