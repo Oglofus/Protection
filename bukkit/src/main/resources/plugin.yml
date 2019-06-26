@@ -1,9 +1,20 @@
-name: ${project.name}
-main: com.oglofus.protection.OglofusPlugin
-author: Nikolaos Grammatikos <nikosgram@oglofus.com>
+name: OglofusProtection
+author: "Nikolaos Grammatikos <nikosgram@oglofus.com>"
+authors: [nikosgram]
+website: https://nikosgram.oglofus.com/
+
 version: ${project.version}
-softdepend: [WorldEdit, WorldGuard]
+main: com.oglofus.protection.OglofusPlugin
+load: STARTUP
+database: false
+
+api-version: "1.14"
+
+depend: [WorldEdit, WorldGuard]
 description: ${project.description}
+
+awareness:
+  - !@UTF8
 
 commands:
   protection:
