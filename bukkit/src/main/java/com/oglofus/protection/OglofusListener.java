@@ -9,6 +9,7 @@ import com.oglofus.protection.api.protector.staff.Rank;
 import com.oglofus.protection.api.reguest.Request;
 import com.oglofus.protection.api.value.Value;
 import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldedit.world.World;
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
@@ -16,6 +17,7 @@ import com.sk89q.worldguard.protection.flags.*;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
+import io.papermc.lib.PaperLib;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -66,10 +68,15 @@ class OglofusListener implements Listener {
      */
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerChat(AsyncPlayerChatEvent event) {
+        if (event.isCancelled()) {
+            return;
+        }
+
         Player player = event.getPlayer();
         String message = event.getMessage();
 
         Optional<Request> requestOptional = plugin.getRequests().getRequest(player.getUniqueId());
+
         if (requestOptional.isPresent()) {
             event.setCancelled(true);
 
@@ -216,6 +223,10 @@ class OglofusListener implements Listener {
      */
     @EventHandler(priority = EventPriority.MONITOR)
     public void onProtectorDestroying(ProtectorDestroyingEvent event) {
+        if (event.isCancelled()) {
+            return;
+        }
+
         Player player = event.getSender();
         Protector protector = event.getProtector();
 
@@ -235,15 +246,19 @@ class OglofusListener implements Listener {
      * @param event the event
      */
     @EventHandler(priority = EventPriority.HIGHEST)
-    public void onProtectorCreating(ProtectorCreatingEvent event) {
-        Protector protector = event.getProtector();
+    public void onProtectorCreating(ProtectorPreCreateEvent event) {
+        if (event.isCancelled()) {
+            return;
+        }
 
-        RegionManager manager =
-                WorldGuard.getInstance().getPlatform().getRegionContainer().get(protector.getRegion().getWorld());
+        RegionManager manager = WorldGuard.getInstance()
+                .getPlatform()
+                .getRegionContainer()
+                .get(event.getWorld());
 
-        if (OglofusUtils.hasRegions(manager, protector.getRegion().getVectors())) {
+        if (OglofusUtils.hasRegions(manager, event.getRegion())) {
             event.getSender().spigot().sendMessage(
-                    new ComponentBuilder("Sorry but is a region near to you.")
+                    new ComponentBuilder("Sorry but there is a region near to you.")
                             .color(ChatColor.RED)
                             .create()
             );
@@ -362,20 +377,25 @@ class OglofusListener implements Listener {
      * @param event the event
      */
     @EventHandler(priority = EventPriority.MONITOR)
-    public void checkLimits(ProtectorCreatingEvent event) {
-        Protector protector = event.getProtector();
+    public void checkLimits(ProtectorPreCreateEvent event) {
+        if (event.isCancelled()) {
+            return;
+        }
+
         Player player = event.getSender();
 
         RegionManager manager = WorldGuard.getInstance()
                 .getPlatform()
                 .getRegionContainer()
-                .get(protector.getRegion().getWorld());
+                .get(event.getWorld());
 
         if (manager == null) {
             player.spigot().sendMessage(new ComponentBuilder(
                     "There is not region manager for this world.")
                     .color(ChatColor.RED)
                     .create());
+
+            event.setCancelled(true);
 
             return;
         }
@@ -429,6 +449,10 @@ class OglofusListener implements Listener {
      */
     @EventHandler
     public void createProtector(BlockPlaceEvent event) {
+        if (event.isCancelled()) {
+            return;
+        }
+
         Block block = event.getBlockPlaced();
         Player player = event.getPlayer();
         Location location = block.getLocation();
@@ -493,19 +517,22 @@ class OglofusListener implements Listener {
             }
 
             BlockVector3 vector = BlockVector3.at(location.getX(), location.getY(), location.getZ());
+            CuboidRegion cuboidRegion = CuboidRegion.fromCenter(vector, radius);
+
+            ProtectorPreCreateEvent protectorPreCreateEvent = new ProtectorPreCreateEvent(world, player, cuboidRegion);
+
+            Bukkit.getPluginManager().callEvent(protectorPreCreateEvent);
+
+            if (protectorPreCreateEvent.isCancelled()) {
+                event.setCancelled(true);
+
+                return;
+            }
 
             ProtectedRegion region = new ProtectedCuboidRegion(
                     OglofusUtils.generateId(manager),
-                    BlockVector3.at(
-                            vector.getX() - radius,
-                            0,
-                            vector.getZ() - radius
-                    ),
-                    BlockVector3.at(
-                            vector.getX() + radius,
-                            bukkitWorld.getMaxHeight(),
-                            vector.getZ() + radius
-                    )
+                    cuboidRegion.getPos1(),
+                    cuboidRegion.getPos2()
             );
 
             region.setFlag(ProtectionFlags.PROTECTOR_FLAG, vector.toVector3());
@@ -545,6 +572,7 @@ class OglofusListener implements Listener {
             Bukkit.getPluginManager().callEvent(createdEvent);
 
             BaseComponent[] message = createdEvent.getMessage();
+
             if (message != null) {
                 player.spigot().sendMessage(message);
             }

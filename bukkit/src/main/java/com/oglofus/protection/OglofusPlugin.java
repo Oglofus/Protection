@@ -21,6 +21,7 @@ import com.sk89q.worldedit.world.block.BlockTypes;
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
+import io.papermc.lib.PaperLib;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -113,6 +114,8 @@ public class OglofusPlugin extends JavaPlugin implements Manager {
     @Override
     public void onEnable() {
         super.onEnable();
+
+        PaperLib.suggestPaper(this);
 
         getServer().getPluginManager().registerEvents(new OglofusListener(this), this);
 
@@ -560,6 +563,11 @@ public class OglofusPlugin extends JavaPlugin implements Manager {
 
                         region.reload();
                         protector.reload();
+
+                        protectors.syncProtectors();
+                        protectors.forEach(protector -> {
+                            protector.getEffects().refresh();
+                        });
 
                         status = ConfigurationStatus.Loaded;
 

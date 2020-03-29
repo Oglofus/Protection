@@ -612,6 +612,7 @@ class OglofusProtector implements Protector {
             if (enabled) {
                 org.bukkit.World world1 = Bukkit.getWorld(world.getName());
 
+
                 region.getSmall().getWalls().forEach(vector -> {
                     Location location = new Location(
                             world1,
